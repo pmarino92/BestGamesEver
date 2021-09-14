@@ -1,12 +1,16 @@
-# Live Project <a id="top"></a>
+# BestGamesEver Web Application <a id="top"></a>
 Live Project with a team of members using Python, Bootstrap, Django, and Agile methodologies.
 # Introduction 
-For my Python live project at The Tech Academy, I worked with a development team of my peers to create a fully functioning web application through the use of the Django framework. The web application that I created is meant to be a database of user's favorite video games. As a team we shared stories of various difficulty that ranged from backend to frontend as well as UX improvements that needed to be completed. Over the course of the two week sprint I had the opportunity to understand the software development lifecycle as well as implement programming techniques that I'm confident I will use again and again.
-# User Stories 
+For my Python live project at The Tech Academy, I worked with a development team of my peers to create a fully functioning web application through the use of the Django framework. The web application that I created is meant to be a database of user's favorite video games and where people can find their next favorite game. As a team we shared stories of various difficulty that ranged from frontend styling to backend api's. Over the course of the two week sprint I had the opportunity to understand the software development lifecycle through the use of Daily Standup where we would share what we did yesterday, what we plan to do today, and any roadblocks we have encountered as well as implement programming techniques that I'm confident I will use again and again.
+# Front-end Stories
 * [Bootstrap for styling](#bootstrap)
 * [Navigation Bar](#navigation-bar)
-* [Edit and Delete User Inputs](#edit-and-delete-functions)
+* [Models and Database Functionality](#edit-and-delete-functions)
+
+# Back-end Stories
 * [Beautiful Soup](#beautiful-soup)
+* [API-WIP](#api)
+
 
 # Bootstrap <a id="bootstrap"></a>
 For my live project, I decided to style my web app through the use of Bootstrap. I implemented Bootstrap to style everything from the navigation bar to my database forms. I used Bootstrap because I believe it is easy to setup, a good grid system, and overall is just more flexible than the traditional html/css. Below are some code snippets of my utilization of Bootstrap and how it looked on my project.
@@ -62,8 +66,22 @@ I was able to create a functioning navigation bar that redirects users to the da
     </nav>
     
    ```
-# Edit and Delete Functions <a id="edit-and-delete-functions"></a>
-I allowed for edits and deletion of entries through the use of model forms and instances that displayed the content of a single item from the database as well as a deletion confirmation alert to the user.
+# Models and Database Functionality <a id="edit-and-delete-functions"></a>
+I was able to create a model named "Game" which allowed storage within my SQLite3 database. This allowed the user to input several fields which included: name of the game, year it was released, genre, and a description of the game. Furthermore, I allowed for edits and deletion of entries through the use of model forms and instances in my views.py file that displayed the content of a single item from the database as well as a deletion confirmation alert to the user.
+
+```
+class Game(models.Model):
+    name = models.CharField(max_length=60)
+    genre = models.CharField(max_length=60)
+    year = models.IntegerField(default='2000')
+    description = models.TextField(max_length=200)
+
+    objects = models.Manager()
+
+
+    def __str__(self):
+        return self.name
+```
 
 ```
 def Edit_Games(request, game_id):
@@ -121,6 +139,31 @@ def View_Price(request):
     return render(request, 'BestGamesEver/View_Price.html', {'game': game_data})
  
  ```
+ # Work in Progress-API <a id="api"></a>
+ To round out the backend stories, I attempted to connect to the Meetup API to provide user's a place to find gaming meetup groups, however, despite my efforts meetup's API did not connect, and I ran out of time for my live project. However, I was able to connect to an api on rapidapi.com that would show user's data with regards to the Legend of Zelda. I am still learning about API's and how important they are in software development as well as fitting it into my project. Below is a snippet of my API function I was able to call and render to a webpage.
+ 
+ ``` 
+ 
+ def api(request):
+    conn = http.client.HTTPSConnection("the-legend-of-zelda.p.rapidapi.com")
+
+    headers = {
+        'x-rapidapi-host': "the-legend-of-zelda.p.rapidapi.com",
+        'x-rapidapi-key': "0dc56d5340msh7696d153664dadfp121956jsn1fac11e318d3"
+    }
+
+    conn.request("GET", "/items?name=Bow&page=0&limit=5", headers=headers)
+
+    res = conn.getresponse()
+    data = res.read()
+    print(data)
+    content={'info':data}
+
+    print(data.decode("utf-8"))
+    return render(request, 'BestGamesEver/API.html', content)
+    
+  ```
+ 
  *Jump to [Bootstrap for styling](#bootstrap), [Navigation Bar](#navigation-bar), [Edit and Delete User Inputs](#edit-and-delete-functions), [Top](#top)
 
 
